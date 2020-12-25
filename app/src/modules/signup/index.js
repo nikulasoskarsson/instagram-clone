@@ -1,8 +1,10 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { inject } from 'mobx-react'
 
-const index = () => {
+const index = (props) => {
+  console.log('authStore', props)
   const navigation = useNavigation()
   return (
     <View>
@@ -13,4 +15,4 @@ const index = () => {
   )
 }
 
-export default index
+export default inject('authStore')(index)
