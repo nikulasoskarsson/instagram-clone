@@ -1,5 +1,7 @@
 import axios from 'axios'
 
-export default instagramAPI = axios.create({
-  baseUrl: 'http://localhost/instagram/api/endpoints',
+const instagramAPI = axios.create({
+  baseURL: 'http://localhost/instagram/api/endpoints',
 })
+
+export default instagramAPI

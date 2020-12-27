@@ -6,6 +6,8 @@ import AuthStack from './src/navigation/AuthNavigation'
 import AuthLoading from './src/modules/authLoading'
 import { Provider } from 'mobx-react'
 import RootStore from './src/stores/Rootstore'
+import { ThemeProvider } from 'styled-components'
+import ThemeStore from './src/theme/ThemeStore'
 
 const stores = {
   authStore: RootStore.auth,
@@ -14,10 +16,12 @@ console.log('stores', RootStore.auth)
 export default function App() {
   return (
     <Provider {...stores}>
-      <NavigationContainer>
-        <StatusBar style='auto' />
-        <AuthLoading />
-      </NavigationContainer>
+      <ThemeProvider theme={ThemeStore}>
+        <NavigationContainer>
+          <StatusBar style='auto' />
+          <AuthLoading />
+        </NavigationContainer>
+      </ThemeProvider>
     </Provider>
   )
 }

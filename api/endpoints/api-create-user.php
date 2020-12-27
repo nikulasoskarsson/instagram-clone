@@ -1,36 +1,40 @@
 <?php
+header('Access-Control-Allow-Origin: *');  // TODO remove and find a propper fix
+
+$json = json_decode(file_get_contents('php://input'));
+
 
 
 require_once(__DIR__ . '/../helpers/helper-api.php');
 $HelperAPI = new HelperAPI();
 
-// Validate all the fields
-$HelperAPI->validateIssetAndLength('firstName', 2, 20);
-$HelperAPI->validateIssetAndLength('lastName', 2, 20);
-$HelperAPI->validateIssetAndLength('username', 2, 20);
-$HelperAPI->validateIssetAndEmail('email');
-$HelperAPI->validateIssetAndSize('dobMonth', 1, 12);
-$HelperAPI->validateIssetAndSize('dobYear', 1900, 2010);
-$HelperAPI->validateIssetAndSize('dobDay', 1, 31);
+// TODO redo validation helper methods and uncomment
+// $HelperAPI->validateIssetAndLength($json->firstName, 2, 20);
+// $HelperAPI->validateIssetAndLength($json->lastName, 2, 20);
+// $HelperAPI->validateIssetAndLength($json->username, 2, 20);
+// $HelperAPI->validateIssetAndEmail($json->email);
+// $HelperAPI->validateIssetAndSize($json->dobMonth, 1, 12);
+// $HelperAPI->validateIssetAndSize($json->dobYear, 1900, 2010);
+// $HelperAPI->validateIssetAndSize($json->dobDay, 1, 31);
 
 $timestampNow = time();
 
 //Format  the input fields to a timestamp
-$month = $_POST['dobMonth'];
-$year = $_POST['dobYear'];
-$day = $_POST['dobDay'];
+$month = $json->dobMonth;
+$year = $json->dobYear;
+$day = $json->dobDay;
 $dobDate = "$day-$month-$year";
 $dobTimestamp = strtotime($dobDate);
 
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$password = password_hash($json->password, PASSWORD_DEFAULT);
 
 require_once(__DIR__ . '/../db/connection.php');
 $sql = "CALL createUser(:firstName,:lastName,:username,:email,:password,:signupDate,:dateOfBirth)";
 $query = $db->prepare($sql);
-$query->bindParam(':firstName', $_POST['firstName'], PDO::PARAM_STR);
-$query->bindParam(':lastName', $_POST['lastName'], PDO::PARAM_STR);
-$query->bindParam(':username', $_POST['username'], PDO::PARAM_STR);
-$query->bindParam(':email', $_POST['email'], PDO::PARAM_STR);
+$query->bindParam(':firstName', $json->firstName, PDO::PARAM_STR);
+$query->bindParam(':lastName', $json->lastName, PDO::PARAM_STR);
+$query->bindParam(':username', $json->username, PDO::PARAM_STR);
+$query->bindParam(':email', $json->email, PDO::PARAM_STR);
 $query->bindParam(':password', $password, PDO::PARAM_STR);
 $query->bindParam(':signupDate', $timestampNow, PDO::PARAM_STR);
 $query->bindParam(':dateOfBirth', $dobTimestamp, PDO::PARAM_STR);
