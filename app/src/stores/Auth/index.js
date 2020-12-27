@@ -14,9 +14,12 @@ const BaseStore = types
     afterCreate() {
       Object.assign(self, initialState)
     },
-    createUser: flow(function* () {
+    createUser: flow(function* (user) {
       try {
-        const res = yield instagramAPI.post('/api-create-user.php')
+        const res = yield instagramAPI.post(
+          '/api-create-user.php',
+          JSON.stringify(user)
+        )
         console.log('the res,', res)
       } catch (error) {
         console.log('error:', error)
